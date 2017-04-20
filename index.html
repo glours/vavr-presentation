@@ -396,7 +396,7 @@ public Option&lt;Address&gt; safeGetAddress(String userName) {
 					<section>
 						<h2>Partial Application example</h2>
 						<pre><code class="java">private Function4 &lt;Integer,Integer,Integer,Integer,Integer&gt; sum
-		= (a, b, c, d ) -&lt; a + b + c + d;
+		= (a, b, c, d ) -&gt; a + b + c + d;
 
 private Function1&lt;Integer, Integer&gt; partialApplicationFunc
 		= sum.apply(1,2,3);
@@ -437,8 +437,8 @@ public void should_use_memoization_to_add() throws Exception {
 	double firstCall  = this.examples.memoize();
 
 	assertThat(List.range(0, 20)
-		.map(val -&lt; this.examples.memoize()))
-		.allMatch(val -&lt; val == firstCall);
+		.map(val -&gt; this.examples.memoize()))
+		.allMatch(val -&gt; val == firstCall);
 }
 						</code></pre>
 					</section>
