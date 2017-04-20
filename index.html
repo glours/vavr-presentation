@@ -7,7 +7,7 @@
 		<title>reveal.js</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+		<link rel="stylesheet" href="css/theme/moon.css">
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -24,8 +24,525 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<section>
+						<h2>And Java becomes more functional With Javaslang!</h2>
+						<img src="assets/img/javaslang-logo.png" class="no-borders">
+					</section>
+					<section>
+						<h2>And Java becomes more functional with <span style="text-decoration:line-through;">Javaslang</span>!</h2>
+						<div class="img-strike">
+							<img src="assets/img/javaslang-logo.png" class="no-borders">
+						</div>
+					</section>
+					<section>
+						<h2>And Java becomes more functional with Vavr.io!</h2>
+						<img src="assets/img/vavr-logo.png" class="no-borders">
+					</section>
+				</section>
+				<section>
+					<section data-background-image="./assets/img/lambda.svg" data-background-size="60%">
+						<h2>Functional Programming</h2>
+						<h4>What does it mean? </h4>
+					</section>
+					<section>
+						<h2>No more side effects!</h2>
+						<ul>
+							<li> Functions are first-class citizens </li>
+							<li> Immutability </li>
+							<li> Expressiveness </li>
+							<li> Safety </li>
+						</ul>
+					</section>
+					<section>
+						<h2>Referential Transparency</h2>
+						<div class="">
+							<pre>
+							<code class="java">int globalValue = 0;
+// No Referential Transparency
+int rq(int x) {
+	globalValue++;
+	return x + globalValue;
+}
+//Referential Transparency
+int rt(int x) {
+	return x + 1;
+}
+								</code>
+							</pre>
+						</div>
+					</section>
+					<section>
+						<h2>Referential Transparency</h2>
+						<h3>Other example</h3>
+						<div class="">
+							<pre>
+							<code class="java">// No Referential Transparency
+Math.random();
+
+//Referential Transparency
+Math.max(5, 42);
+								</code>
+							</pre>
+						</div>
+					</section>
+				</section>
+				<section>
+					<h2>Java 8 & Functional Programming</h2>
+					<ul>
+						<li>Lambda</li>
+						<li>Stream</li>
+						<li>Optional</li>
+						<li>Functional Interface</li>
+						<li>Function composition</li>
+						<li>Collections interfaces review</li>
+					</ul>
+				</section>
+				<section data-background-image="./assets/img/frustration.gif">
+					<h2>There's still stuff missing</h2>
+				</section>
+				<section>
+					<h2>Who I am ?</h2>
+					<img src="./assets/img/avatar.png" height="300" class="no-borders" style="float: left">
+					<ul style="margin-top: 30px">
+						<li>Twitter : <a href="https://www.twitter.com/glours">@glours</a></li>
+						<li><a href="www.saagie.io">Saagie</a> 'Frozen' Team Leader</li>
+						<li>Java and Javascript developer</li>
+						<li>Team member of Devoxx France</li>
+					</ul>
+				</section>
+				<section>
+					<section>
+						<h2>So ...</h2>
+						<img src="./assets/img/vavr-logo.png">
+					</section>
+					<section data-background-color="white">
+						<img src="./assets/img/javaslang-overview.png" class="no-borders">
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Immutable Collections</h2>
+					</section>
+					<section>
+						<h2>It's already in JDK 8 !</h2>
+						<h5>Humm....</h5>
+						<pre><code class="java">public List&lt;Integer&gt; unmodifiableListJdk8() {
+	List&lt;Integer&gt; jdkList = IntStream.range(0,20)
+		.boxed()
+		.collect(Collectors.toList());
+	return Collections.unmodifiableList(jdkList);
+}
+
+@Test
+public void should_verify_behaviour_of_jdk_8_unmodifiable_list() throws Exception {
+	List&lt;Integer&gt; unmodifiableList = this.examples.unmodifiableListJdk8();
+	unmodifiableList.add(21);
+	assertThat(unmodifiableList).hasSize(21);
+}
+						</code></pre>
+					</section>
+					<section data-background-color="white">
+						<h2>List, Array, Stream ...</h2>
+						<img src="./assets/img/collections-seq.png" class="no-borders" alt="" width="1000">
+					</section>
+					<section>
+						<h2>Java 8 example</h2>
+						<pre><code class="java">java.util.List&lt;User&gt; filterUserWithValidEmail() {
+	return this.usersJdk8
+		.stream()
+		.filter(user -> {
+			try {
+				return user.isEmailValid();
+			} catch (InvalidFormatException e) {
+				return false;
+			}
+		})
+		.collect(Collectors.toList());
+}					</code></pre>
+					</section>
+					<section>
+						<h2>With Vavr</h2>
+						<pre><code class="java">public List&lt;User&gt; filterUserWithValidAddressVavr() {
+	return this.usersVavr
+                .filter(user -&gt; Try.of(() -&gt; user
+				.isAddressValid())
+				.getOrElse(false));
+    }
+						</code></pre>
+					</section>
+					<section>
+						<h2>An other Java 8 example</h2>
+						<pre><code class="java">public java.util.List&lt;Address&gt; filterInvalidAddressFromRouenJdk8() {
+	return this.usersJdk8.stream()
+                .filter(User::isInvalidAddressFromRouen)
+                .map(User::getAddress)
+                .collect(Collectors.toList());
+}
+						</code></pre>
+					</section>
+					<section>
+						<h2>And With Vavr</h2>
+						<pre><code class="java">public List&lt;Address&gt; filterInvalidAddressFromRouenVavr() {
+        return this.usersVavr
+                .filter(User::isInvalidAddressFromRouen)
+                .map(User::getAddress);
+    }
+						</code></pre>
+					</section>
+					<section>
+						<h2>Stream consistency</h2>
+						<p>Java 8</p>
+						<pre><code class="java">public java.util.stream.Stream&lt;String&gt; mapUserToLowerCaseUserNameWithJdk8Steam() {
+        java.util.stream.Stream&lt;User&gt; userNameStream = java.util.stream.Stream.of(generateUser(7), generateUser(15));
+        userNameStream.map(user -&gt; user.getUserName()
+					.toUpperCase());
+
+        return userNameStream
+                .map(user -&gt; user.getUserName().toLowerCase());
+    }
+
+java.lang.IllegalStateException: stream has already been operated upon or closed
+
+at java.util.stream.AbstractPipeline.&lt;init&gt;(AbstractPipeline.java:203)
+at java.util.stream.ReferencePipeline.&lt;init&gt;(ReferencePipeline.java:94)
+at java.util.stream.ReferencePipeline$StatelessOp.&lt;init&gt;(ReferencePipeline.java:618)
+at java.util.stream.ReferencePipeline$3.&lt;init&gt;(ReferencePipeline.java:187)
+at java.util.stream.ReferencePipeline.map(ReferencePipeline.java:186)</code></pre>
+					</section>
+					<section>
+						<h2>Stream consistency</h2>
+						<p>Vavr</p>
+						<pre><code class="java">public Stream&lt;String&gt; mapUserToLowerCaseUserNameWithVavrStream() {
+        Stream&lt;User&gt; userNameStream = Stream.of(generateUser(7), generateUser(15));
+        userNameStream.map(user -&gt; user.getUserName()
+					.toUpperCase());
+
+        return userNameStream
+                .map(user -&gt; user.getUserName().toLowerCase());
+}
+						</code></pre>
+					</section>
+					<section data-background-color="white">
+						<h2>Map, Set ...</h2>
+						<img src="./assets/img/collections-set-map.png" class="no-borders" width="1000">
+					</section>
+					<section>
+						<h2>Tuple</h2>
+						<img src="./assets/img/tuple-javadoc.png" class="no-borders">
+					</section>
+					<section>
+						<h2>Java 8 example</h2>
+						<pre><code class="java">public java.util.Map&lt;String, User&gt; filterMapOfUserWithValidAddressJdk8() {
+        java.util.Map&lt;String, User&gt; usersMap = this.usersToMapJdk8();
+        return usersMap.entrySet().stream()
+                .filter(entry -&gt; {
+                    try {
+                        return entry.getValue().isAddressValid();
+                    } catch (InvalidFormatException e) {
+                        return false;
+                    }
+                })
+                .collect(Collectors.toMap((entry -&gt; entry.getKey()), entry -&gt; entry.getValue()));
+    }</code></pre>
+					</section>
+					<section>
+						<h2>With Vavr</h2>
+						<pre><code class="java">public Map&lt;String, User&gt; filterMapOfUserWithValidAddressVavr() {
+        Map&lt;String, User&gt; userMap = this.usersToMap();
+        return userMap
+                .filter(tuple -&gt; Try.of(() -&gt;
+			tuple._2.isAddressValid()).getOrElse(false));
+    }
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Value Types</h2>
+						<ul>
+							<li>Option</li>
+							<li>Try</li>
+							<li>Either</li>
+							<li>Validation</li>
+							<li>(Lazy, Future, Promise, Match)</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Option</h2>
+						<h5>1 Interface</h5>
+						<img src="./assets/img/javaslang-none.png" alt="Javaslang None Object definition" class="no-borders">
+						<img src="./assets/img/javaslang-some.png" alt="Javaslang Some Object definition" class="no-borders">
+					</section>
+					<section>
+						<h2>Java 8 Optional</h2>
+						<pre><code class="java">public Optional&lt;Address&gt;  optionalOfUserAddress(String userName) {
+        if( !this.usersJdk8.containsKey(userName)) {
+            return Optional.empty();
+        }
+        return Optional.of(this.usersJdk8.get(userName).getAddress());
+}
+
+public Optional&lt;Address&gt; optionalOfNullUsageForUserAddress(String userName) {
+	return Optional.ofNullable(this.usersJdk8.get(userName))
+		.map(user -> user.getAddress());
+}
+						</code></pre>
+					</section>
+					<section>
+						<h2>Vavr Option</h2>
+						<pre><code class="java">public Option&lt;Address&gt; optionOfUserAddress(String userName) {
+        return this.usersVavr.get(userName)
+		.map(user -&gt; user.getAddress());
+}
+/* Because Map.get(key) return an Option in Vavr
+Option&lt;V&gt;get(K var1);
+*/
+						</code></pre>
+					</section>
+					<section>
+						<h2>Try</h2>
+						<h5>May return an exception or a successful result</h5>
+						<pre><code>public Try tryOfUserAddress(String userName) {
+        return Try.of(() -> this.usersVavr.get(userName)
+				.get().getAddressIfValid());
+    }</code></pre>
+					</section>
+					<section>
+						<h2>Either</h2>
+						<h5>Represents a value of 2 possible types</h5>
+						<h5>Either is either Right or Left</h5>
+						<h5>by convention Right refers to the nominal case</h5>
+					</section>
+					<section>
+						<h2>Either Example</h2>
+						<pre><code> public Either&lt;String, User&gt; eitherOfUser(String userName)  {
+        return this.usersVavr.get(userName)
+			.toRight("Not Found");
+}</code></pre>
+					</section>
+					<section>
+						<h2>Validation</h2>
+						<h5>Errors accumulation</h5>
+						<h5>Processes all validations, no circuit breaking when an error is found</h5>
+					</section>
+					<section>
+						<h2>Example available on github</h2>
+						<a href="https://github.com/glours/vavr-examples">GitHub: https://goo.gl/BHcYRJ</a>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Functions</h2>
+						<h5>What about the first-class citizens ?</h5>
+					</section>
+					<section>
+						<h2>Java 8 comes with Function and BiFunction</h2>
+						<h2>Vavr provides functional interfaces up to 8 parameters</h2>
+					</section>
+					<section>
+						<blockquote>In fact Vavr functional interfaces are Java 8 functional interfaces on steroids</blockquote>
+						<a href="http://www.vavr.io/vavr-docs/#_functions">Vavr documentation</a>
+					</section>
+					<section>
+						<h2>Composition</h2>
+						<h5>Application of one function as the result of another to produce a new one</h5>
+					</section>
+					<section>
+						<h2>Composition example</h2>
+						<pre><code class="java">private Function1&lt;Option&lt;User&gt;, Option&lt;String&gt;&gt; lastName
+	= user -&gt; user.map(exist -&gt; exist.getLastName());
+
+private Function1&lt;Option&lt;String&gt;, Option&lt;String&gt;&gt; toUpperCase
+	= value -&gt; value.map(string -&gt; string.toUpperCase());
+
+private Function1&lt;Option&lt;User&gt;, Option&lt;String&gt;&gt; lastNameInUpperCase
+	= lastName.andThen(toUpperCase);
+
+public String userLastNameToUpperCase(String userName) {
+	return lastNameInUpperCase
+			.apply(usersJavaslang.get(userName))
+			.getOrElse("User Not Found");
+}
+						</code></pre>
+					</section>
+					<section>
+						<h2>Lifting</h2>
+						<h5>Turning a side effect function to a total function</h5>
+					</section>
+					<section>
+						<h2>Lifting example</h2>
+						<pre><code class="java">private Function1&lt;Option&lt;User&gt;, Address&gt; getAddressWithSideEffect
+		= user -&lt; user.get().getAddress();
+
+private Function1&lt;Option&lt;User&gt;, Option&lt;Address&gt;&gt; safeGetAddress
+		= Function1.lift(getAddressWithSideEffect);
+
+public Address sideEffectGetAddress(String userName) {
+	return getAddressWithSideEffect
+			.apply(usersJavaslang.get(userName));
+}
+
+public Option&lt;Address&gt; safeGetAddress(String userName) {
+	return safeGetAddress
+			.apply(this.usersVavr.get(userName));
+}
+						</code></pre>
+					</section>
+					<section>
+						<h2>Partial Application</h2>
+						<h5>Deriving a new function from an existing one by fixing some parameters</h5>
+					</section>
+					<section>
+						<h2>Partial Application example</h2>
+						<pre><code class="java">private Function4 &lt;Integer,Integer,Integer,Integer,Integer&gt; sum
+		= (a, b, c, d ) -&lt; a + b + c + d;
+
+private Function1&lt;Integer, Integer&gt; partialApplicationFunc
+		= sum.apply(1,2,3);
+
+public int partialApplication(int val) {
+	return partialApplicationFunc.apply(val);
+}
+						</code></pre>
+					</section>
+					<section>
+						<h2>Currying</h2>
+						<h5>Deriving a new function from an existing by fixing 1 parameter and returning a new function with arity of 1</h5>
+					</section>
+					<section>
+						<h2>Currying example</h2>
+						<pre><code class="java">private Function1&lt;Integer, Function1&lt;Integer, Function1&lt;Integer, Integer&gt;&gt;&gt; curriedFunc
+		= sum.curried().apply(5);
+
+public int currying(int val1, int val2, int val3) {
+	return curriedFunc.apply(val1).apply(val2).apply(val3);
+}
+						</code></pre>
+					</section>
+					<section>
+						<h2>Memoization</h2>
+						<h5>Kind of cache system</h5>
+						<h5>A function is executed only once and then returns the result from the cache</h5>
+					</section>
+					<section>
+						<h2>Memoization example</h2>
+						<pre><code class="java">private Function0&gt;Double&lt; memoizedRandom = Function0.of(Math::random).memoized();
+public double memoize() {
+	return memoizedRandom.apply();
+}
+
+@Test
+public void should_use_memoization_to_add() throws Exception {
+	double firstCall  = this.examples.memoize();
+
+	assertThat(List.range(0, 20)
+		.map(val -&lt; this.examples.memoize()))
+		.allMatch(val -&lt; val == firstCall);
+}
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Pattern Matching and Property checking</h2>
+					</section>
+					<section>
+						<h2>Pattern Matching, the Vavr way</h2>
+						<ul>
+							<li>$() - wildcard pattern</li>
+							<li>$(value) - equals pattern</li>
+							<lig>$(predicate) - conditional pattern</lig>
+						</ul>
+					</section>
+					<section>
+						<h2>Syntactic Sugar</h2>
+						<ul>
+							<li>Predicate <pre><code>Case(is(1), "one")</code></pre></li>
+							<li>Multiple conditions <pre><code>Case(isIn("-h", "--help"), ...)</code></pre></li>
+							<lig>User-Defined Patterns, Guards ...</lig>
+						</ul>
+					</section>
+					<section>
+						<h2>Pattern Matching example</h2>
+						<pre><code class="java">Function0&lt;Option&lt;String&gt;&gt; usageDocumentation =  () -&gt; Option.of("usage: JavaslangDemo [options] \n") ;
+Function1&lt;Option&lt;String&gt;, Option&lt;String&gt;&gt; versionDocumentation = previous -&gt; previous.map(prev -&gt; prev + "-v, --version : Display version Information");
+Function0&lt;Option&lt;String&gt;&gt; helpDocumentation = usageDocumentation.andThen(versionDocumentation);
+Function2&lt;Option&lt;String&gt;, Option&lt;String&gt;, Option&lt;String&gt;&gt; invalidCommand = (previous, arg) -&gt; previous.map(prev -&gt; "Unable to parse command line option : " + arg.getOrElse("") +"\n" + prev);
+
+public static void main( String[] args )
+{
+    Option&lt;String&gt; arg = Array.of(args).headOption();
+    String commandDescription = API.Match(arg.getOrElse("")).of(
+	    Case(isIn("-h", "--help"), helpDocumentation.apply()),
+	    Case(isIn("-v", "--vesion"), versionDocumentation.apply(Option.none()) ),
+	    Case($(), invalidCommand.apply(helpDocumentation.apply(), arg))
+    ).getOrElse("Error when parsing argument");
+    System.out.println(commandDescription);
+}
+						</code></pre>
+					</section>
+					<section>
+						<h2>Another example</h2>
+						<pre><code class="java">public List&lt;Either&lt;Address, Address&gt;&gt; patternMatchingList() {
+	List&lt;User&gt; users = this.usersVavr.map(tuple -&gt; tuple._2).toList();
+	return users.map(user -&gt;
+	   Match(validateUser(Option.of(user))).of(
+	     Case(Valid($()), validUser -&gt; Either.right(validUser.getAddress())),
+	     Case(Invalid($()), errorList -&gt; Either.left(user.getAddress()))
+	   ));
+}
+						</code></pre>
+					</section>
+					<section>
+						<h2>Property Checking</h2>
+					</section>
+					<section>
+						<h2>Property Checking example</h2>
+						<pre><code class="java">@Test
+public void should_l33t_string() throws Exception {
+	Arbitrary&lt;String&gt;  leetCharEto3 = Arbitrary.string(Gen.frequency(
+			Tuple.of(1, Gen.choose('A','Z')),
+			Tuple.of(1, Gen.choose('a','z'))
+	))
+	.filter(s -&gt; s.length() &gt; 10)
+	.filter(s -&gt; s.matches("\\w*[eE]+\\w*"));
+
+Function1&lt;String, String&gt; transformETo3 =
+		s -&gt; s.replaceAll("[eE]", "3");
+
+CheckedFunction1&lt;String, Boolean&gt; checkTransformETo3 =
+		s -&gt; transformETo3.apply(s)
+			.matches("\\w*[^eE]+\\w*")
+			&& transformETo3.apply(s).contains("3");
+
+Property.def("Each e character must be replace by a 3")
+		.forAll(leetCharEto3)
+		.suchThat(checkTransformETo3)
+		.check()
+		.assertIsSatisfied();
+
+}
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<h2>Vavr Modules</h2>
+					<img src="./assets/img/vavr-modules.png" alt="" class="no-borders">
+				</section>
+				<section>
+					<h2>Vavr Links</h2>
+					<p><a href="https://www.vavr.io/vavr-docs/">Documentation: https://goo.gl/dMKKjN</a></p>
+					<p><a href="http://www.javadoc.io/doc/io.javaslang/javaslang/2.0.6">Javadoc: https://goo.gl/PHQ81g</a></p>
+					<p><a href="https://github.com/vavr-io/vavr">Source code : https://goo.gl/p3ivLM</a></p>
+				</section>
+				<section data-background-image="./assets/img/thank_you.gif">
+					<h1>Thank You</h1>
+				</section>
+				<section data-background-image="./assets/img/mandatory.gif">
+					<h1>Questions ?</h1>
+					<p><a href="https://github.com/glours/vavr-examples">source code: https://goo.gl/BHcYRJ </a></p>
+				</section>
 			</div>
 		</div>
 
@@ -36,6 +553,18 @@
 			// More info https://github.com/hakimel/reveal.js#configuration
 			Reveal.initialize({
 				history: true,
+                controls: true,
+                progress: true,
+                slideNumber: false,
+                keyboard: true,
+                overview: true,
+                center: true,
+                touch: true,
+                hideAddressBar: true,
+                transition: 'slide', // none/fade/slide/convex/concave/zoom
+                transitionSpeed: 'default',
+                backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+                viewDistance: 3,
 
 				// More info https://github.com/hakimel/reveal.js#dependencies
 				dependencies: [

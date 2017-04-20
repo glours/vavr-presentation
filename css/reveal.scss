@@ -1444,3 +1444,34 @@ body {
 .zoomed .reveal .roll span:after {
 	visibility: hidden;
 }
+
+img.no-borders {
+	border: none !important;
+	-webkit-box-shadow: none !important;
+	-moz-box-shadow: none !important;
+	box-shadow: none !important;
+}
+
+.img-strike {
+	position: relative;
+	display: inline-block;
+	&:after {
+		position: absolute;
+		content: "";
+		height: 15px;
+		width: 100%;
+		background: white;
+		top: 50%;
+		left: 0;
+		box-shadow: 0 2px 4px rgba(0,0,0,.5);
+		transform: rotate(10deg) translate(0, -50%);
+	}
+}
+
+section[data-background-color="white"] {
+	color: #002b36;
+	*{
+		color: inherit!important;
+	}
+}
+

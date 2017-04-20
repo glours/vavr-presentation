@@ -54,7 +54,6 @@ body {
   font-weight: normal;
   line-height: 1.2;
   letter-spacing: normal;
-  text-transform: uppercase;
   text-shadow: none;
   word-wrap: break-word; }
 
@@ -105,7 +104,7 @@ body {
   list-style-type: decimal; }
 
 .reveal ul {
-  list-style-type: disc; }
+  list-style-type: none; }
 
 .reveal ul ul {
   list-style-type: square; }
