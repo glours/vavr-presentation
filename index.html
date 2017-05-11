@@ -427,7 +427,7 @@ public int currying(int val1, int val2, int val3) {
 					</section>
 					<section>
 						<h2>Memoization example</h2>
-						<pre><code class="java">private Function0&gt;Double&lt; memoizedRandom = Function0.of(Math::random).memoized();
+						<pre><code class="java">private Function0&lt;Double&gt; memoizedRandom = Function0.of(Math::random).memoized();
 public double memoize() {
 	return memoizedRandom.apply();
 }
@@ -458,8 +458,8 @@ public void should_use_memoization_to_add() throws Exception {
 					<section>
 						<h2>Syntactic Sugar</h2>
 						<ul>
-							<li>Predicate <pre><code>Case(is(1), "one")</code></pre></li>
-							<li>Multiple conditions <pre><code>Case(isIn("-h", "--help"), ...)</code></pre></li>
+							<li>Predicate <pre><code>Case($(is(1)), "one")</code></pre></li>
+							<li>Multiple conditions <pre><code>Case($(isIn("-h", "--help")), ...)</code></pre></li>
 							<lig>User-Defined Patterns, Guards ...</lig>
 						</ul>
 					</section>
@@ -473,12 +473,12 @@ Function2&lt;Option&lt;String&gt;, Option&lt;String&gt;, Option&lt;String&gt;&gt
 public static void main( String[] args )
 {
     Option&lt;String&gt; arg = Array.of(args).headOption();
-    String commandDescription = API.Match(arg.getOrElse("")).of(
-	    Case(isIn("-h", "--help"), helpDocumentation.apply()),
-	    Case(isIn("-v", "--vesion"), versionDocumentation.apply(Option.none()) ),
-	    Case($(), invalidCommand.apply(helpDocumentation.apply(), arg))
-    ).getOrElse("Error when parsing argument");
-    System.out.println(commandDescription);
+	String commandDescription = API.Match(arg.getOrElse("")).of(
+		Case($(isIn("-h", "--help")), helpDocumentation.apply()),
+		Case($(isIn("-v", "--version")), versionDocumentation.apply(Option.none()) ),
+		Case($(), invalidCommand.apply(helpDocumentation.apply(), arg))
+	).getOrElse("Error when parsing argument");
+	System.out.println(commandDescription);
 }
 						</code></pre>
 					</section>
@@ -487,10 +487,10 @@ public static void main( String[] args )
 						<pre><code class="java">public List&lt;Either&lt;Address, Address&gt;&gt; patternMatchingList() {
 	List&lt;User&gt; users = this.usersVavr.map(tuple -&gt; tuple._2).toList();
 	return users.map(user -&gt;
-	   Match(validateUser(Option.of(user))).of(
-	     Case(Valid($()), validUser -&gt; Either.right(validUser.getAddress())),
-	     Case(Invalid($()), errorList -&gt; Either.left(user.getAddress()))
-	   ));
+                Match(validateUser(Option.of(user))).of(
+		Case($Valid($()), validUser -&gt; Either.right(validUser.getAddress())),
+		Case($Invalid($()), errorList -&gt; Either.left(user.getAddress()))
+	));
 }
 						</code></pre>
 					</section>
