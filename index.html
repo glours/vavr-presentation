@@ -25,20 +25,8 @@
 		<div class="reveal">
 			<div class="slides">
 				<section>
-					<section>
-						<h2>And Java becomes more functional With Javaslang!</h2>
-						<img src="assets/img/javaslang-logo.png" class="no-borders">
-					</section>
-					<section>
-						<h2>And Java becomes more functional with <span style="text-decoration:line-through;">Javaslang</span>!</h2>
-						<div class="img-strike">
-							<img src="assets/img/javaslang-logo.png" class="no-borders">
-						</div>
-					</section>
-					<section>
-						<h2>And Java becomes more functional with Vavr.io!</h2>
-						<img src="assets/img/vavr-logo.png" class="no-borders">
-					</section>
+					<h2>And Java becomes more functional with Vavr.io!</h2>
+					<img src="assets/img/vavr-logo.png" class="no-borders">
 				</section>
 				<section>
 					<section data-background-image="./assets/img/lambda.svg" data-background-size="60%">
@@ -116,6 +104,15 @@ Math.max(5, 42);
 						<h2>So ...</h2>
 						<img src="./assets/img/vavr-logo.png">
 					</section>
+					<section>
+						<h2>Vavr - turns java™ upside down</h2>
+						<img src="./assets/img/vavr-description.png" class="no-borders">
+						<ul style="margin-top: 30px">
+							<li>Creator <a href="https://github.com/danieldietrich">Daniel Dietrich</a></li>
+							<li>Formerly Javaslang</li>
+							<li><a href="https://www.vavr.io">vavr.io</a></li>
+						</ul>
+					</section>
 					<section data-background-color="white">
 						<img src="./assets/img/javaslang-overview.png" class="no-borders">
 					</section>
@@ -148,6 +145,25 @@ public void should_verify_behaviour_of_jdk_8_unmodifiable_list() throws Exceptio
 					</section>
 					<section>
 						<h2>Java 8 example</h2>
+						<pre><code class="java">public java.util.List&lt;Address&gt; filterInvalidAddressFromRouenJdk8() {
+	return this.usersJdk8.stream()
+                .filter(User::isInvalidAddressFromRouen)
+                .map(User::getAddress)
+                .collect(Collectors.toList());
+}
+						</code></pre>
+					</section>
+					<section>
+						<h2>With Vavr</h2>
+						<pre><code class="java">public List&lt;Address&gt; filterInvalidAddressFromRouenVavr() {
+        return this.usersVavr
+                .filter(User::isInvalidAddressFromRouen)
+                .map(User::getAddress);
+    }
+						</code></pre>
+					</section>
+					<section>
+						<h2>An other Java 8 example</h2>
 						<pre><code class="java">java.util.List&lt;User&gt; filterUserWithValidEmail() {
 	return this.usersJdk8
 		.stream()
@@ -162,31 +178,12 @@ public void should_verify_behaviour_of_jdk_8_unmodifiable_list() throws Exceptio
 }					</code></pre>
 					</section>
 					<section>
-						<h2>With Vavr</h2>
+						<h2>And With Vavr</h2>
 						<pre><code class="java">public List&lt;User&gt; filterUserWithValidAddressVavr() {
 	return this.usersVavr
                 .filter(user -&gt; Try.of(() -&gt; user
 				.isAddressValid())
 				.getOrElse(false));
-    }
-						</code></pre>
-					</section>
-					<section>
-						<h2>An other Java 8 example</h2>
-						<pre><code class="java">public java.util.List&lt;Address&gt; filterInvalidAddressFromRouenJdk8() {
-	return this.usersJdk8.stream()
-                .filter(User::isInvalidAddressFromRouen)
-                .map(User::getAddress)
-                .collect(Collectors.toList());
-}
-						</code></pre>
-					</section>
-					<section>
-						<h2>And With Vavr</h2>
-						<pre><code class="java">public List&lt;Address&gt; filterInvalidAddressFromRouenVavr() {
-        return this.usersVavr
-                .filter(User::isInvalidAddressFromRouen)
-                .map(User::getAddress);
     }
 						</code></pre>
 					</section>
@@ -233,26 +230,19 @@ at java.util.stream.ReferencePipeline.map(ReferencePipeline.java:186)</code></pr
 					</section>
 					<section>
 						<h2>Java 8 example</h2>
-						<pre><code class="java">public java.util.Map&lt;String, User&gt; filterMapOfUserWithValidAddressJdk8() {
+						<pre><code class="java">public java.util.Map&lt;String, User&gt; filterMapOfUserWithPredicateJdk8(Predicate&lt;User&gt; predicate) {
         java.util.Map&lt;String, User&gt; usersMap = this.usersToMapJdk8();
         return usersMap.entrySet().stream()
-                .filter(entry -&gt; {
-                    try {
-                        return entry.getValue().isAddressValid();
-                    } catch (InvalidFormatException e) {
-                        return false;
-                    }
-                })
-                .collect(Collectors.toMap((entry -&gt; entry.getKey()), entry -&gt; entry.getValue()));
-    }</code></pre>
+                .filter(entry -&gt; predicate.test(entry.getValue()))
+                .collect(Collectors.toMap(entry -&gt; entry.getKey(), entry -&gt; entry.getValue()));
+}</code></pre>
 					</section>
 					<section>
 						<h2>With Vavr</h2>
-						<pre><code class="java">public Map&lt;String, User&gt; filterMapOfUserWithValidAddressVavr() {
+						<pre><code class="java">public Map&lt;String, User&gt; filterMapOfUserWithPredicateVavr(Predicate&lt;User&gt; predicate) {
         Map&lt;String, User&gt; userMap = this.usersToMap();
         return userMap
-                .filter(tuple -&gt; Try.of(() -&gt;
-			tuple._2.isAddressValid()).getOrElse(false));
+		.filter(tuple -&gt; predicate.test(tuple._2));
     }
 						</code></pre>
 					</section>
@@ -341,12 +331,19 @@ Option&lt;V&gt;get(K var1);
 						<h2>Vavr provides functional interfaces up to 8 parameters</h2>
 					</section>
 					<section>
-						<blockquote>In fact Vavr functional interfaces are Java 8 functional interfaces on steroids</blockquote>
+						<blockquote>In fact Vavr functional interfaces are <br>Java&nbsp;8 functional interfaces on steroids</blockquote>
 						<a href="http://www.vavr.io/vavr-docs/#_functions">Vavr documentation</a>
 					</section>
 					<section>
 						<h2>Composition</h2>
 						<h5>Application of one function as the result of another to produce a new one</h5>
+					</section>
+					<section>
+						<h2>Warning !!!</h2>
+						<blockquote>
+							Following examples are not Remi Forax compliant ;-)<br>
+							For me, it depends of your use case
+						</blockquote>
 					</section>
 					<section>
 						<h2>Composition example</h2>
@@ -373,7 +370,7 @@ public String userLastNameToUpperCase(String userName) {
 					<section>
 						<h2>Lifting example</h2>
 						<pre><code class="java">private Function1&lt;Option&lt;User&gt;, Address&gt; getAddressWithSideEffect
-		= user -&lt; user.get().getAddress();
+		= user -&gt; user.get().getAddress();
 
 private Function1&lt;Option&lt;User&gt;, Option&lt;Address&gt;&gt; safeGetAddress
 		= Function1.lift(getAddressWithSideEffect);
@@ -465,7 +462,7 @@ public void should_use_memoization_to_add() throws Exception {
 					</section>
 					<section>
 						<h2>Pattern Matching example</h2>
-						<pre><code class="java">Function0&lt;Option&lt;String&gt;&gt; usageDocumentation =  () -&gt; Option.of("usage: JavaslangDemo [options] \n") ;
+						<pre><code class="java">Function0&lt;Option&lt;String&gt;&gt; usageDocumentation =  () -&gt; Option.of("usage: VavrDemo [options] \n-h, --help : Display command line help\n");
 Function1&lt;Option&lt;String&gt;, Option&lt;String&gt;&gt; versionDocumentation = previous -&gt; previous.map(prev -&gt; prev + "-v, --version : Display version Information");
 Function0&lt;Option&lt;String&gt;&gt; helpDocumentation = usageDocumentation.andThen(versionDocumentation);
 Function2&lt;Option&lt;String&gt;, Option&lt;String&gt;, Option&lt;String&gt;&gt; invalidCommand = (previous, arg) -&gt; previous.map(prev -&gt; "Unable to parse command line option : " + arg.getOrElse("") +"\n" + prev);
@@ -531,16 +528,33 @@ Property.def("Each e character must be replace by a 3")
 					<img src="./assets/img/vavr-modules.png" alt="" class="no-borders">
 				</section>
 				<section>
+					<section>
+						<h2>Vavr 1.0</h2>
+						<ul>
+							<li>Modularization</li>
+							<li>Interoperability</li>
+							<li>Documentation</li>
+							<li>Be ready to remove stuff coming in Java 9, 2018.3 ...</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Focus on Modularization</h2>
+						<img src="./assets/img/vavr-modularization.png" alt="Vavr Modularization" class="no-borders" height="550px">
+					</section>
+					<section>
+						<h2>Remove in Java 10 (or 20xx.3/9) ?</h2>
+						<img src="./assets/img/vavr-api.png" class="no-borders" alt="Vavr api module">
+					</section>
+				</section>
+				<section>
 					<h2>Vavr Links</h2>
 					<p><a href="https://www.vavr.io/vavr-docs/">Documentation: https://goo.gl/dMKKjN</a></p>
 					<p><a href="http://www.javadoc.io/doc/io.javaslang/javaslang/2.0.6">Javadoc: https://goo.gl/PHQ81g</a></p>
 					<p><a href="https://github.com/vavr-io/vavr">Source code : https://goo.gl/p3ivLM</a></p>
+					<p><a href="http://blog.vavr.io/">Blog: http://blog.vavr.io/</a></p>
 				</section>
-				<section data-background-image="./assets/img/thank_you.gif">
-					<h1>Thank You</h1>
-				</section>
-				<section data-background-image="./assets/img/mandatory.gif">
-					<h1>Questions ?</h1>
+				<section data-background-image="./assets/img/thanks.gif"></section>
+				<section data-background-image="./assets/img/questions.gif">
 					<p><a href="https://github.com/glours/vavr-examples">source code: https://goo.gl/BHcYRJ </a></p>
 				</section>
 			</div>
