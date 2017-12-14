@@ -339,24 +339,15 @@ Option&lt;V&gt;get(K var1);
 						<h5>Application of one function as the result of another to produce a new one</h5>
 					</section>
 					<section>
-						<h2>Warning !!!</h2>
-						<blockquote>
-							Following examples are not Remi Forax compliant ;-)<br>
-							For me, it depends of your use case
-						</blockquote>
-					</section>
-					<section>
 						<h2>Composition example</h2>
-						<pre><code class="java">private Function1&lt;Option&lt;User&gt;, Option&lt;String&gt;&gt; lastName
-	= user -&gt; user.map(exist -&gt; exist.getLastName());
+						<pre><code class="java">Function1&lt;User, String&gt; lastName = User::getLastName;
 
-private Function1&lt;Option&lt;String&gt;, Option&lt;String&gt;&gt; toUpperCase
-	= value -&gt; value.map(string -&gt; string.toUpperCase());
+Function1&lt;String, String&gt; toUpperCase = String::toUpperCase;
 
-private Function1&lt;Option&lt;User&gt;, Option&lt;String&gt;&gt; lastNameInUpperCase
+Function1&lt;Option&lt;User&gt;, Option&lt;String&gt;&gt; lastNameInUpperCase
 	= lastName.andThen(toUpperCase);
 
-public String userLastNameToUpperCase(String userName) {
+String userLastNameToUpperCase(String userName) {
 	return lastNameInUpperCase
 			.apply(usersJavaslang.get(userName))
 			.getOrElse("User Not Found");
@@ -369,18 +360,18 @@ public String userLastNameToUpperCase(String userName) {
 					</section>
 					<section>
 						<h2>Lifting example</h2>
-						<pre><code class="java">private Function1&lt;Option&lt;User&gt;, Address&gt; getAddressWithSideEffect
+						<pre><code class="java">Function1&lt;Option&lt;User&gt;, Address&gt; getAddressWithSideEffect
 		= user -&gt; user.get().getAddress();
 
-private Function1&lt;Option&lt;User&gt;, Option&lt;Address&gt;&gt; safeGetAddress
+Function1&lt;Option&lt;User&gt;, Option&lt;Address&gt;&gt; safeGetAddress
 		= Function1.lift(getAddressWithSideEffect);
 
-public Address sideEffectGetAddress(String userName) {
+Address sideEffectGetAddress(String userName) {
 	return getAddressWithSideEffect
 			.apply(usersJavaslang.get(userName));
 }
 
-public Option&lt;Address&gt; safeGetAddress(String userName) {
+Option&lt;Address&gt; safeGetAddress(String userName) {
 	return safeGetAddress
 			.apply(this.usersVavr.get(userName));
 }
@@ -392,13 +383,13 @@ public Option&lt;Address&gt; safeGetAddress(String userName) {
 					</section>
 					<section>
 						<h2>Partial Application example</h2>
-						<pre><code class="java">private Function4 &lt;Integer,Integer,Integer,Integer,Integer&gt; sum
+						<pre><code class="java">Function4 &lt;Integer,Integer,Integer,Integer,Integer&gt; sum
 		= (a, b, c, d ) -&gt; a + b + c + d;
 
-private Function1&lt;Integer, Integer&gt; partialApplicationFunc
+Function1&lt;Integer, Integer&gt; partialApplicationFunc
 		= sum.apply(1,2,3);
 
-public int partialApplication(int val) {
+int partialApplication(int val) {
 	return partialApplicationFunc.apply(val);
 }
 						</code></pre>
@@ -409,10 +400,10 @@ public int partialApplication(int val) {
 					</section>
 					<section>
 						<h2>Currying example</h2>
-						<pre><code class="java">private Function1&lt;Integer, Function1&lt;Integer, Function1&lt;Integer, Integer&gt;&gt;&gt; curriedFunc
+						<pre><code class="java">Function1&lt;Integer, Function1&lt;Integer, Function1&lt;Integer, Integer&gt;&gt;&gt; curriedFunc
 		= sum.curried().apply(5);
 
-public int currying(int val1, int val2, int val3) {
+int currying(int val1, int val2, int val3) {
 	return curriedFunc.apply(val1).apply(val2).apply(val3);
 }
 						</code></pre>
@@ -424,13 +415,13 @@ public int currying(int val1, int val2, int val3) {
 					</section>
 					<section>
 						<h2>Memoization example</h2>
-						<pre><code class="java">private Function0&lt;Double&gt; memoizedRandom = Function0.of(Math::random).memoized();
-public double memoize() {
+						<pre><code class="java">Function0&lt;Double&gt; memoizedRandom = Function0.of(Math::random).memoized();
+double memoize() {
 	return memoizedRandom.apply();
 }
 
 @Test
-public void should_use_memoization_to_add() throws Exception {
+void should_use_memoization_to_add() throws Exception {
 	double firstCall  = this.examples.memoize();
 
 	assertThat(List.range(0, 20)
